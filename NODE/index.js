@@ -1,6 +1,6 @@
 const fs = require('fs');
 
-const countries = fs.readFileSync("countries.txt", { encoding: 'utf8', flag: 'r' }).split(/\r?\n/);
+const countries = fs.readFileSync("countries.txt", { encoding: 'utf8', flag: 'r' }).split("\n");
 
 //Eliminar el primer elemento del array: "Country Population Area"
 countries.shift(); 
