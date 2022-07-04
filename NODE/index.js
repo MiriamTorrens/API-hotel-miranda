@@ -13,10 +13,11 @@ const countriesList =
         //Dividir cada elemento del array en objeto: nombre, poblacion, area, densidad
         .map(c => c.split(" "))
         .map(c => {
-            let name = c.splice(0, (c.length - 2)).join().replace(/,/g, ' ');
-            let population = parseFloat(c[c.length - 2]?.replace(/,/g, ''));
-            let area = parseFloat(c[c.length - 1]?.replace(/,/g, ''));
-            let country = {
+            const name = c.splice(0, (c.length - 2)).join().replace(/,/g, ' ');
+            const population = parseFloat(c[c.length - 2]?.replace(/,/g, ''));
+            const area = parseFloat(c[c.length - 1]?.replace(/,/g, ''));
+            
+            const country = {
                 name: name,
                 population: population,
                 area: area,
