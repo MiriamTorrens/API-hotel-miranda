@@ -18,7 +18,6 @@ passport.use(
     },
     async (username, password, done) => {
       try {
-        console.log(username, password, user);
         if (username === user.username && password === user.password) {
           return done(null, user, { message: "Logged in Successfully" });
         }
