@@ -3,14 +3,17 @@ const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
+const passport = require('passport');
 
-const indexRouter = require('./routes/index');
+require('./auth/auth');
 
 //require routes
+const indexRouter = require('./routes/index');
 const bookingsRouter = require('./routes/bookings.route');
 const roomsRouter = require('./routes/rooms.route');
 const contactRouter = require('./routes/contact.route');
 const usersRouter = require('./routes/users.route');
+const loginRouter = require('./routes/login.route');
 
 const app = express();
 
@@ -27,10 +30,12 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
 
 //routes
-app.use('/bookings', bookingsRouter);
-app.use('/rooms', roomsRouter);
-app.use('/contact', contactRouter);
-app.use('/users', usersRouter);
+//app.use('/', loginRouter);
+app.use('/login', loginRouter);
+app.use('/bookings', passport.authenticate('jwt', { session: false }), bookingsRouter);
+app.use('/rooms', passport.authenticate('jwt', { session: false }), roomsRouter);
+app.use('/contact', passport.authenticate('jwt', { session: false }), contactRouter);
+app.use('/users', passport.authenticate('jwt', { session: false }), usersRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
