@@ -25,9 +25,9 @@ exports.updateUser = (req, res) => {
     if (user.id === req.params.id) {
       user = user[index];
       return !user[index]
-        ? res.status(404).json({ success: false, message: "user not found" })
+        ? res.status(404).json({ success: false, message: "User not found" })
         : (user[index] = req.body);
     }
   });
-  return res.json({ success: true, message: "user successfully updated" });
+  return res.json({ success: true, message: "User successfully updated" });
 };

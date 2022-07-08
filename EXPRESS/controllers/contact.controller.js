@@ -25,9 +25,9 @@ exports.updateContact = (req, res) => {
     if (contact.id === req.params.id) {
       contact = contact[index];
       return !contact[index]
-        ? res.status(404).json({ success: false, message: "Booking not found" })
+        ? res.status(404).json({ success: false, message: "Contact not found" })
         : (contact[index] = req.body);
     }
   });
-  return res.json({ success: true, message: "Booking successfully updated" });
+  return res.json({ success: true, message: "Contact successfully updated" });
 };
