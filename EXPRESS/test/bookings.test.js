@@ -1,6 +1,13 @@
 const request = require("supertest");
 const app = require("../app");
 const bookings = require("../data/bookings.json");
+const jwt = require("jsonwebtoken");
+const { passportKey } = require("../env");
+const { timeToRefreshToken } = require("../constants");
+
+const token = jwt.sign({ user: {} }, passportKey, {
+  expiresIn: timeToRefreshToken,
+});
 
 const booking = {
   fullName: "Natalie Fadel",
@@ -22,9 +29,6 @@ const booking = {
     "nostrud pariatur cillum cillum velit cupidatat aute qui elit occaecat occaecat aliquip excepteur cupidatat excepteur cupidatat in duis id incididunt tempor enim Lorem incididunt exercitation dolor commodo dolore enim ipsum sit est velit in pariatur cupidatat non ipsum voluptate ullamco veniam culpa tempor nostrud incididunt reprehenderit cillum culpa sunt voluptate amet quis Lorem culpa pariatur cupidatat proident mollit sint mollit reprehenderit amet in pariatur veniam ipsum aliquip aliquip elit excepteur eu consectetur cillum minim velit",
   status: "Check In",
 };
-
-const token =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7fSwiaWF0IjoxNjU3MTkyODkyfQ.hQdZsZrNqi2RJFv04knOoFfqNpk4xwsnQtogu0ne3Y8";
 
 describe("Bookings route", () => {
   it("should not access bookings without authorization", async () => {

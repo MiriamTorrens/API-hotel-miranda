@@ -1,6 +1,13 @@
 const request = require("supertest");
 const app = require("../app");
 const contact = require("../data/contact.json");
+const jwt = require("jsonwebtoken");
+const { passportKey } = require("../env");
+const { timeToRefreshToken } = require("../constants");
+
+const token = jwt.sign({ user: {} }, passportKey, {
+  expiresIn: timeToRefreshToken,
+});
 
 const contactMessage = {
   id: "8e8e7c2f-7506",
@@ -16,9 +23,6 @@ const contactMessage = {
   viewed: false,
   archived: false,
 };
-
-const token =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7fSwiaWF0IjoxNjU3MTkyODkyfQ.hQdZsZrNqi2RJFv04knOoFfqNpk4xwsnQtogu0ne3Y8";
 
 describe("Contact route", () => {
   it("should not access contact without authorization", async () => {

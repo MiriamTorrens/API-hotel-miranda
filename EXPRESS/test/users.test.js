@@ -1,6 +1,13 @@
 const request = require("supertest");
 const app = require("../app");
 const users = require("../data/users.json");
+const jwt = require("jsonwebtoken");
+const { passportKey } = require("../env");
+const { timeToRefreshToken } = require("../constants");
+
+const token = jwt.sign({ user: {} }, passportKey, {
+  expiresIn: timeToRefreshToken,
+});
 
 const user = {
   fullName: "Antonio Emard",
@@ -15,9 +22,6 @@ const user = {
   photo: "https://xsgames.co/randomusers/assets/avatars/male/60.jpg",
   password: "HBUKGB4133K",
 };
-
-const token =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7fSwiaWF0IjoxNjU3MTkyODkyfQ.hQdZsZrNqi2RJFv04knOoFfqNpk4xwsnQtogu0ne3Y8";
 
 describe("Users route", () => {
   it("should not access users without authorization", async () => {

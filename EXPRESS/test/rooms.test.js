@@ -1,6 +1,13 @@
 const request = require("supertest");
 const app = require("../app");
 const rooms = require("../data/rooms.json");
+const jwt = require("jsonwebtoken");
+const { passportKey } = require("../env");
+const { timeToRefreshToken } = require("../constants");
+
+const token = jwt.sign({ user: {} }, passportKey, {
+  expiresIn: timeToRefreshToken,
+});
 
 const room = {
   id: "a1ca1095-2cb8",
@@ -29,9 +36,6 @@ const room = {
   status: "Available",
   roomName: "MMSPZAJ1",
 };
-
-const token =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7fSwiaWF0IjoxNjU3MTkyODkyfQ.hQdZsZrNqi2RJFv04knOoFfqNpk4xwsnQtogu0ne3Y8";
 
 describe("Rooms route", () => {
   it("should not access rooms without authorization", async () => {
