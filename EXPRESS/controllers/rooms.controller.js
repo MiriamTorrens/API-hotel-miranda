@@ -1,10 +1,13 @@
 const { connection } = require("../db");
 
 exports.roomsList = (req, res) => {
-  connection.query("SELECT * FROM rooms", (err, results) => {
-    if (err) throw err;
-    return res.json({ rooms: results });
-  });
+  connection.query(
+    "SELECT room_id, room_number, bed_type, description, offer, price, discount, cancellation, amenities, url_image FROM rooms INNER JOIN rooms_images USING (room_id) GROUP BY room_id",
+    (err, results) => {
+      if (err) throw err;
+      return res.json({ rooms: results });
+    }
+  );
 };
 
 exports.addRoom = (req, res) => {
@@ -22,6 +25,7 @@ exports.addRoom = (req, res) => {
     "INSERT INTO rooms (room_number, bed_type, description, offer, price, discount, cancellation, amenities) VALUES (?)",
     [newRoom],
     (err, results) => {
+      console.log(newRoom);
       if (err) throw err;
       return res.json({ success: true, message: "Room successfully added" });
     }

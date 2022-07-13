@@ -1,33 +1,77 @@
-const contact = require("../data/contact.json");
+const { connection } = require("../db");
 
 exports.contactList = (req, res) => {
-  return res.json(contact);
+  connection.query("SELECT * FROM contact", (err, results) => {
+    if (err) throw err;
+    return res.json({ contact: results });
+  });
 };
+
 exports.addContact = (req, res) => {
-  contact.push(req.body);
-  return res.json({ success: true, message: "Contact successfully added" });
+  const newContact = [
+    req.body.contact_name,
+    req.body.contact_email,
+    req.body.contact_phone,
+    req.body.contact_date,
+    req.body.subject,
+    req.body.comment,
+    req.body.viewed,
+    req.body.archived,
+  ];
+  connection.query(
+    "INSERT INTO contact (contact_name, contact_email, contact_phone, contact_date, subject, comment, viewed, archived) VALUES (?)",
+    [newContact],
+    (err, results) => {
+      if (err) throw err;
+      return res.json({ success: true, message: "Contact successfully added" });
+    }
+  );
 };
 exports.getContact = (req, res) => {
-  const contactMessage = contact.find((c) => c.id === req.params.id);
-  return !contactMessage
-    ? res.status(404).json({ success: false, message: "Contact not found" })
-    : res.json(contactMessage);
-};
-exports.deleteContact = (req, res) => {
-  const index = contact.findIndex((c) => c.id === req.params.id);
-  contact.splice(index, 1);
-  return index < 0
-    ? res.status(404).json({ success: false, message: "Contact not found" })
-    : res.json({ sucess: true, message: "Contact successfully deleted" });
-};
-exports.updateContact = (req, res) => {
-  contact.forEach((contact, index) => {
-    if (contact.id === req.params.id) {
-      contact = contact[index];
-      return !contact[index]
+  const id = req.params.id;
+  connection.query(
+    "SELECT * FROM contact WHERE contact_id = ?",
+    [id],
+    (err, results) => {
+      return !results
         ? res.status(404).json({ success: false, message: "Contact not found" })
-        : (contact[index] = req.body);
+        : res.json({ contact: results });
     }
-  });
-  return res.json({ success: true, message: "Contact successfully updated" });
+  );
+};
+
+exports.deleteContact = (req, res) => {
+  const id = req.params.id;
+  connection.query(
+    "DELETE FROM contact WHERE contact_id = ?",
+    [id],
+    (err, results) => {
+      return !results
+        ? res.status(404).json({ success: false, message: "Contact not found" })
+        : res.json({ success: true, message: "Contact successfully deleted" });
+    }
+  );
+};
+
+exports.updateContact = (req, res) => {
+  const id = req.params.id;
+  connection.query(
+    "UPDATE contact SET contact_name = ?, contact_email = ?, contact_phone = ?, contact_date = ?, subject = ?, comment = ?, viewed = ?, archived = ? WHERE contact_id = ?",
+    [
+      req.body.contact_name,
+      req.body.contact_email,
+      req.body.contact_phone,
+      req.body.contact_date,
+      req.body.subject,
+      req.body.comment,
+      req.body.viewed,
+      req.body.archived,
+      id,
+    ],
+    (err, results) => {
+      return !results
+        ? res.status(404).json({ success: false, message: "Contact not found" })
+        : res.json({ success: true, message: "Contact successfully updated" });
+    }
+  );
 };
