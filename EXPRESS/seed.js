@@ -1,7 +1,7 @@
 const { faker } = require("@faker-js/faker");
 const { connection } = require("./db");
 
-//Rellenar tabla users
+// Rellenar tabla users
 const sqlUsers =
   "INSERT INTO users (user_name, user_email, user_phone, start_date, occupation, status, photo, password) VALUES (?)";
 for (let i = 0; i < 10; i++) {
@@ -21,7 +21,7 @@ for (let i = 0; i < 10; i++) {
   });
 }
 
-//Rellenar tabla contact
+// Rellenar tabla contact
 const sqlContact =
   "INSERT INTO contact (contact_name, contact_email, contact_phone, contact_date, subject, comment, viewed, archived) VALUES (?)";
 for (let i = 0; i < 10; i++) {
@@ -41,7 +41,7 @@ for (let i = 0; i < 10; i++) {
   });
 }
 
-//Rellenar tabla rooms
+Rellenar tabla rooms
 const sqlRooms =
   "INSERT INTO rooms (room_number, bed_type, description, offer, price, discount, cancellation, amenities) VALUES (?)";
 for (let i = 1; i <= 10; i++) {
@@ -70,7 +70,7 @@ for (let i = 1; i <= 10; i++) {
     console.log("Number of records inserted: " + result.affectedRows);
   });
 
-  //Rellenar tabla rooms_images
+  //   Rellenar tabla rooms_images
   for (let j = 1; j <= 5; j++) {
     const sqlImages =
       "INSERT INTO rooms_images (room_id, url_image) VALUES (?)";
