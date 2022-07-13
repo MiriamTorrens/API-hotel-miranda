@@ -1,33 +1,78 @@
-const rooms = require("../data/rooms.json");
+const { connection } = require("../db");
 
 exports.roomsList = (req, res) => {
-  return res.json(rooms);
-};
-exports.addRoom = (req, res) => {
-  rooms.push(req.body);
-  return res.json({ success: true, message: "Room successfully added" });
-};
-exports.getRoom = (req, res) => {
-  const room = rooms.find((r) => r.id === req.params.id);
-  return !room
-    ? res.status(404).json({ success: false, message: "Room not found" })
-    : res.json(room);
-};
-exports.deleteRoom = (req, res) => {
-  const index = rooms.findIndex((r) => r.id === req.params.id);
-  rooms.splice(index, 1);
-  return index < 0
-    ? res.status(404).json({ success: false, message: "Room not found" })
-    : res.json({ success: true, message: "Room successfully deleted" });
-};
-exports.updateRoom = (req, res) => {
-  rooms.forEach((room, index) => {
-    if (room.id === req.params.id) {
-      room = room[index];
-      return !room[index]
-        ? res.status(404).json({ success: false, message: "Booking not found" })
-        : (rooms[index] = req.body);
-    }
+  connection.query("SELECT * FROM rooms", (err, results) => {
+    if (err) throw err;
+    return res.json({ rooms: results });
   });
-  return res.json({ success: true, message: "Booking successfully updated" });
+};
+
+exports.addRoom = (req, res) => {
+  const newRoom = [
+    req.body.room_number,
+    req.body.bed_type,
+    req.body.description,
+    req.body.offer,
+    req.body.price,
+    req.body.discount,
+    req.body.cancellation,
+    req.body.amenities,
+  ];
+  connection.query(
+    "INSERT INTO rooms (room_number, bed_type, description, offer, price, discount, cancellation, amenities) VALUES (?)",
+    [newRoom],
+    (err, results) => {
+      if (err) throw err;
+      return res.json({ success: true, message: "Room successfully added" });
+    }
+  );
+};
+
+exports.getRoom = (req, res) => {
+  const id = req.params.id;
+  connection.query(
+    "SELECT * FROM rooms WHERE room_id = ?",
+    [id],
+    (err, results) => {
+      return !results
+        ? res.status(404).json({ success: false, message: "Room not found" })
+        : res.json({ room: results });
+    }
+  );
+};
+
+exports.deleteRoom = (req, res) => {
+  const id = req.params.id;
+  connection.query(
+    "DELETE FROM rooms WHERE room_id = ?",
+    [id],
+    (err, results) => {
+      return !results
+        ? res.status(404).json({ success: false, message: "Room not found" })
+        : res.json({ success: true, message: "Room successfully deleted" });
+    }
+  );
+};
+
+exports.updateRoom = (req, res) => {
+  const id = req.params.id;
+  connection.query(
+    "UPDATE rooms SET room_number = ?, bed_type = ?, description = ?, offer = ?, price = ?, discount = ?, cancellation = ?, amenities = ? WHERE room_id = ?",
+    [
+      req.body.room_number,
+      req.body.bed_type,
+      req.body.description,
+      req.body.offer,
+      req.body.price,
+      req.body.discount,
+      req.body.cancellation,
+      req.body.amenities,
+      id,
+    ],
+    (err, results) => {
+      return !results
+        ? res.status(404).json({ success: false, message: "Room not found" })
+        : res.json({ success: true, message: "Room successfully updated" });
+    }
+  );
 };
