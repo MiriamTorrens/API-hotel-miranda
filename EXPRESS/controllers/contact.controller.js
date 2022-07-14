@@ -1,4 +1,19 @@
+const Joi = require("joi");
 const { connection } = require("../db");
+
+const contactSchema = Joi.object({
+  contact_name: Joi.string().max(30).required(),
+  contact_email: Joi.string().email().required(),
+  contact_phone: Joi.string()
+    .length(11)
+    .pattern(/^[0-9-]+$/)
+    .required(),
+  contact_date: Joi.date().required(),
+  subject: Joi.string().max(100),
+  comment: Joi.string(),
+  viewed: Joi.number().min(0).max(1).required(),
+  archived: Joi.number().min(0).max(1).required(),
+});
 
 exports.contactList = (req, res) => {
   connection.query("SELECT * FROM contact", (err, results) => {
@@ -18,14 +33,22 @@ exports.addContact = (req, res) => {
     req.body.viewed,
     req.body.archived,
   ];
-  connection.query(
-    "INSERT INTO contact (contact_name, contact_email, contact_phone, contact_date, subject, comment, viewed, archived) VALUES (?)",
-    [newContact],
-    (err, results) => {
-      if (err) throw err;
-      return res.json({ success: true, message: "Contact successfully added" });
-    }
-  );
+  const { error } = contactSchema.validate(req.body);
+  if (error) {
+    return res.json({ success: false, message: error.details[0].message });
+  } else {
+    connection.query(
+      "INSERT INTO contact (contact_name, contact_email, contact_phone, contact_date, subject, comment, viewed, archived) VALUES (?)",
+      [newContact],
+      (err, results) => {
+        if (err) throw err;
+        return res.json({
+          success: true,
+          message: "Contact successfully added",
+        });
+      }
+    );
+  }
 };
 exports.getContact = (req, res) => {
   const id = req.params.id;
@@ -55,23 +78,33 @@ exports.deleteContact = (req, res) => {
 
 exports.updateContact = (req, res) => {
   const id = req.params.id;
-  connection.query(
-    "UPDATE contact SET contact_name = ?, contact_email = ?, contact_phone = ?, contact_date = ?, subject = ?, comment = ?, viewed = ?, archived = ? WHERE contact_id = ?",
-    [
-      req.body.contact_name,
-      req.body.contact_email,
-      req.body.contact_phone,
-      req.body.contact_date,
-      req.body.subject,
-      req.body.comment,
-      req.body.viewed,
-      req.body.archived,
-      id,
-    ],
-    (err, results) => {
-      return !results
-        ? res.status(404).json({ success: false, message: "Contact not found" })
-        : res.json({ success: true, message: "Contact successfully updated" });
-    }
-  );
+  const { error } = contactSchema.validate(req.body);
+  if (error) {
+    return res.json({ success: false, message: error.details[0].message });
+  } else {
+    connection.query(
+      "UPDATE contact SET contact_name = ?, contact_email = ?, contact_phone = ?, contact_date = ?, subject = ?, comment = ?, viewed = ?, archived = ? WHERE contact_id = ?",
+      [
+        req.body.contact_name,
+        req.body.contact_email,
+        req.body.contact_phone,
+        req.body.contact_date,
+        req.body.subject,
+        req.body.comment,
+        req.body.viewed,
+        req.body.archived,
+        id,
+      ],
+      (err, results) => {
+        return !results
+          ? res
+              .status(404)
+              .json({ success: false, message: "Contact not found" })
+          : res.json({
+              success: true,
+              message: "Contact successfully updated",
+            });
+      }
+    );
+  }
 };
