@@ -1,17 +1,5 @@
-const { JSONCookie } = require("cookie-parser");
 const Joi = require("joi");
 const { connection } = require("../db");
-
-const roomSchema = Joi.object({
-  room_number: Joi.number(),
-  bed_type: Joi.string(),
-  description: Joi.string(),
-  offer: Joi.boolean(),
-  price: Joi.number(),
-  discount: Joi.number(),
-  cancellation: Joi.string(),
-  amenities: Joi.string(),
-});
 
 exports.roomsList = (req, res) => {
   connection.query("SELECT * FROM rooms", (err, results) => {
@@ -35,7 +23,6 @@ exports.addRoom = (req, res) => {
     "INSERT INTO rooms (room_number, bed_type, description, offer, price, discount, cancellation, amenities) VALUES (?)",
     [newRoom],
     (err, results) => {
-      console.log(newRoom);
       if (err) throw err;
       return res.json({ success: true, message: "Room successfully added" });
     }
