@@ -1,13 +1,23 @@
+const { JSONCookie } = require("cookie-parser");
+const Joi = require("joi");
 const { connection } = require("../db");
 
+const roomSchema = Joi.object({
+  room_number: Joi.number(),
+  bed_type: Joi.string(),
+  description: Joi.string(),
+  offer: Joi.boolean(),
+  price: Joi.number(),
+  discount: Joi.number(),
+  cancellation: Joi.string(),
+  amenities: Joi.string(),
+});
+
 exports.roomsList = (req, res) => {
-  connection.query(
-    "SELECT room_id, room_number, bed_type, description, offer, price, discount, cancellation, amenities, url_image FROM rooms INNER JOIN rooms_images USING (room_id) GROUP BY room_id",
-    (err, results) => {
-      if (err) throw err;
-      return res.json({ rooms: results });
-    }
-  );
+  connection.query("SELECT * FROM rooms", (err, results) => {
+    if (err) throw err;
+    return res.json({ rooms: results });
+  });
 };
 
 exports.addRoom = (req, res) => {
@@ -35,7 +45,7 @@ exports.addRoom = (req, res) => {
 exports.getRoom = (req, res) => {
   const id = req.params.id;
   connection.query(
-    "SELECT * FROM rooms WHERE room_id = ?",
+    "SELECT room_id, room_number, bed_type, description, offer, price, discount, cancellation, amenities, GROUP_CONCAT(url_image SEPARATOR ', ') AS images FROM rooms INNER JOIN rooms_images USING (room_id) WHERE room_id = ?",
     [id],
     (err, results) => {
       return !results

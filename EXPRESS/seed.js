@@ -41,7 +41,7 @@ for (let i = 0; i < 10; i++) {
   });
 }
 
-Rellenar tabla rooms
+//Rellenar tabla rooms
 const sqlRooms =
   "INSERT INTO rooms (room_number, bed_type, description, offer, price, discount, cancellation, amenities) VALUES (?)";
 for (let i = 1; i <= 10; i++) {
