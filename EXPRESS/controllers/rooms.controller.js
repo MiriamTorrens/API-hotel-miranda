@@ -42,7 +42,6 @@ exports.addRoom = (req, res) => {
       [newRoom],
       (err, results) => {
         if (err) throw err;
-        console.log(results);
         return res.json({
           success: true,
           message: `Room successfully added, id: ${results.insertId}`,
