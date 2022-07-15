@@ -2,11 +2,11 @@ const Joi = require("joi");
 const { connection } = require("../db");
 
 const bookingSchema = Joi.object({
-  guest_name: Joi.string().max(30).required(),
+  guest_name: Joi.string().max(100).required(),
   order_date: Joi.date().required(),
   checkin: Joi.date().required(),
   checkout: Joi.date().required(),
-  special_request: Joi.string().max(400),
+  special_request: Joi.string().max(2000),
   room_id: Joi.number().required(),
   status: Joi.string().valid("checkin", "checkout", "in_progress"),
 });
@@ -28,9 +28,9 @@ exports.addBooking = (req, res) => {
     req.body.room_id,
     req.body.status,
   ];
-  const { error } = bookingSchema.validate(req.body);
+  const { error } = bookingSchema.validate(req.body, { abortEarly: false });
   if (error) {
-    return res.json({ success: false, message: error.details[0].message });
+    return res.status(400).json({ sucess: false, message: error.message });
   } else {
     connection.query(
       "INSERT INTO bookings (guest_name, order_date, checkin, checkout, special_request, room_id, status) VALUES (?)",
@@ -76,9 +76,9 @@ exports.deleteBooking = (req, res) => {
 
 exports.updateBooking = (req, res) => {
   const id = req.params.id;
-  const { error } = bookingSchema.validate(req.body);
+  const { error } = bookingSchema.validate(req.body, { abortEarly: false });
   if (error) {
-    return res.json({ success: false, message: error.details[0].message });
+    return res.status(400).json({ success: false, message: error.message });
   } else {
     connection.query(
       "UPDATE bookings SET guest_name = ?, order_date = ?, checkin = ?, checkout = ?, special_request = ?, room_id = ?, status = ? WHERE booking_id = ?",

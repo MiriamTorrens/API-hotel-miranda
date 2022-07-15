@@ -2,7 +2,7 @@ const Joi = require("joi");
 const { connection } = require("../db");
 
 const userSchema = Joi.object({
-  user_name: Joi.string().max(30).required(),
+  user_name: Joi.string().max(100).required(),
   user_email: Joi.string().email().required(),
   user_phone: Joi.string()
     .length(11)
@@ -10,9 +10,9 @@ const userSchema = Joi.object({
     .required(),
   start_date: Joi.date().required(),
   occupation: Joi.string().valid("manager", "reception", "room_service"),
-  status: Joi.number().min(0).max(1),
-  photo: Joi.string(),
-  password: Joi.string().min(6).max(15),
+  status: Joi.number().min(0).max(1).required(),
+  photo: Joi.string().required(),
+  password: Joi.string().min(6).max(100).alphanum().required(),
 });
 
 exports.usersList = (req, res) => {
@@ -33,9 +33,9 @@ exports.addUser = (req, res) => {
     req.body.photo,
     req.body.password,
   ];
-  const { error } = userSchema.validate(req.body);
+  const { error } = userSchema.validate(req.body, { abortEarly: false });
   if (error) {
-    return res.json({ success: false, message: error.details[0].message });
+    return res.json({ success: false, message: error.message });
   } else {
     connection.query(
       "INSERT INTO users (user_name, user_email, user_phone, start_date, occupation, status, photo, password) VALUES (?)",
@@ -76,9 +76,9 @@ exports.deleteUser = (req, res) => {
 
 exports.updateUser = (req, res) => {
   const id = req.params.id;
-  const { error } = userSchema.validate(req.body);
+  const { error } = userSchema.validate(req.body, { abortEarly: false });
   if (error) {
-    return res.json({ success: false, message: error.details[0].message });
+    return res.status(400).json({ success: false, message: error.message });
   } else {
     connection.query(
       "UPDATE users SET user_name = ?, user_email = ?, user_phone = ?, start_date = ?, occupation = ?, status = ?, photo = ?, password = ? WHERE user_id = ?",

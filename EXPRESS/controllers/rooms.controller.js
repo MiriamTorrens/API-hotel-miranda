@@ -7,11 +7,11 @@ const roomSchema = Joi.object({
   bed_type: Joi.string()
     .valid("single_bed", "double_bed", "double_superior", "suite")
     .required(),
-  description: Joi.string().max(400),
+  description: Joi.string().max(2000),
   offer: Joi.number().min(0).max(1),
   price: Joi.number().required(),
   discount: Joi.number().max(50),
-  cancellation: Joi.string().max(300),
+  cancellation: Joi.string().max(2000),
   amenities: Joi.string().required(),
 });
 
@@ -33,16 +33,20 @@ exports.addRoom = (req, res) => {
     req.body.cancellation,
     req.body.amenities,
   ];
-  const { error } = roomSchema.validate(req.body);
+  const { error } = roomSchema.validate(req.body, { abortEarly: false });
   if (error) {
-    return res.json({ success: false, message: error.details[0].message });
+    return res.status(400).json({ success: false, message: error.message });
   } else {
     connection.query(
       "INSERT INTO rooms (room_number, bed_type, description, offer, price, discount, cancellation, amenities) VALUES (?)",
       [newRoom],
       (err, results) => {
         if (err) throw err;
-        return res.json({ success: true, message: "Room successfully added" });
+        console.log(results);
+        return res.json({
+          success: true,
+          message: `Room successfully added, id: ${results.insertId}`,
+        });
       }
     );
   }
@@ -76,9 +80,9 @@ exports.deleteRoom = (req, res) => {
 
 exports.updateRoom = (req, res) => {
   const id = req.params.id;
-  const { error } = roomSchema.validate(req.body);
+  const { error } = roomSchema.validate(req.body, { abortEarly: false });
   if (error) {
-    return res.json({ success: false, message: error.details[0].message });
+    return res.status(400).json({ success: false, message: error.message });
   } else {
     connection.query(
       "UPDATE rooms SET room_number = ?, bed_type = ?, description = ?, offer = ?, price = ?, discount = ?, cancellation = ?, amenities = ? WHERE room_id = ?",

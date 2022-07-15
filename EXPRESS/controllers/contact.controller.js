@@ -2,14 +2,14 @@ const Joi = require("joi");
 const { connection } = require("../db");
 
 const contactSchema = Joi.object({
-  contact_name: Joi.string().max(30).required(),
+  contact_name: Joi.string().max(100).required(),
   contact_email: Joi.string().email().required(),
   contact_phone: Joi.string()
     .length(11)
     .pattern(/^[0-9-]+$/)
     .required(),
   contact_date: Joi.date().required(),
-  subject: Joi.string().max(100),
+  subject: Joi.string().max(500),
   comment: Joi.string(),
   viewed: Joi.number().min(0).max(1).required(),
   archived: Joi.number().min(0).max(1).required(),
@@ -33,9 +33,9 @@ exports.addContact = (req, res) => {
     req.body.viewed,
     req.body.archived,
   ];
-  const { error } = contactSchema.validate(req.body);
+  const { error } = contactSchema.validate(req.body, { abortEarly: false });
   if (error) {
-    return res.json({ success: false, message: error.details[0].message });
+    return res.status(400).json({ success: false, message: error.message });
   } else {
     connection.query(
       "INSERT INTO contact (contact_name, contact_email, contact_phone, contact_date, subject, comment, viewed, archived) VALUES (?)",
@@ -78,9 +78,9 @@ exports.deleteContact = (req, res) => {
 
 exports.updateContact = (req, res) => {
   const id = req.params.id;
-  const { error } = contactSchema.validate(req.body);
+  const { error } = contactSchema.validate(req.body, { abortEarly: false });
   if (error) {
-    return res.json({ success: false, message: error.details[0].message });
+    return res.status(400).json({ error: true, message: error.message });
   } else {
     connection.query(
       "UPDATE contact SET contact_name = ?, contact_email = ?, contact_phone = ?, contact_date = ?, subject = ?, comment = ?, viewed = ?, archived = ? WHERE contact_id = ?",
