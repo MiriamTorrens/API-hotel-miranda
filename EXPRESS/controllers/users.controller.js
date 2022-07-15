@@ -1,5 +1,6 @@
 const Joi = require("joi");
 const { connection } = require("../db");
+const bcrypt = require("bcrypt");
 
 const userSchema = Joi.object({
   user_name: Joi.string().max(100).required(),
@@ -31,7 +32,7 @@ exports.addUser = (req, res) => {
     req.body.occupation,
     req.body.status,
     req.body.photo,
-    req.body.password,
+    bcrypt.hashSync(req.body.password, 5),
   ];
   const { error } = userSchema.validate(req.body, { abortEarly: false });
   if (error) {
@@ -90,7 +91,7 @@ exports.updateUser = (req, res) => {
         req.body.occupation,
         req.body.status,
         req.body.photo,
-        req.body.password,
+        bcrypt.hashSync(req.body.password),
         id,
       ],
       (err, results) => {
