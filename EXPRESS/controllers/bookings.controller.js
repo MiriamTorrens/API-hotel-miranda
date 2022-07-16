@@ -94,14 +94,10 @@ exports.updateBooking = (req, res) => {
       ],
 
       (err, results) => {
-        return !results
-          ? res
-              .status(404)
-              .json({ success: false, message: "Booking not found" })
-          : res.json({
-              success: true,
-              message: "Booking successfully updated",
-            });
+        return res.json({
+          success: true,
+          message: "Booking successfully updated",
+        });
       }
     );
   }

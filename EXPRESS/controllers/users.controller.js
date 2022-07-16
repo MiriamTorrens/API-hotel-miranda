@@ -13,7 +13,7 @@ const userSchema = Joi.object({
   occupation: Joi.string().valid("manager", "reception", "room_service"),
   status: Joi.number().min(0).max(1).required(),
   photo: Joi.string().required(),
-  password: Joi.string().min(6).max(100).alphanum().required(),
+  password: Joi.string().min(6).max(100).required(),
 });
 
 exports.usersList = (req, res) => {
@@ -91,13 +91,16 @@ exports.updateUser = (req, res) => {
         req.body.occupation,
         req.body.status,
         req.body.photo,
-        bcrypt.hashSync(req.body.password),
+        bcrypt.hashSync(req.body.password, 5),
         id,
       ],
       (err, results) => {
         return !results
           ? res.status(404).json({ success: false, message: "User not found" })
-          : res.json({ success: true, message: "User successfully updated" });
+          : res.json({
+              success: true,
+              message: "User successfully updated",
+            });
       }
     );
   }

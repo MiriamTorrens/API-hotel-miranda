@@ -3,11 +3,8 @@ const localStrategy = require("passport-local").Strategy;
 const JWTstrategy = require("passport-jwt").Strategy;
 const ExtractJWT = require("passport-jwt").ExtractJwt;
 const { passportKey } = require("../env");
-
-const user = {
-  username: "m.torrens@miranda.com",
-  password: "1234",
-};
+const { connection } = require("../db");
+const bcrypt = require("bcrypt");
 
 passport.use(
   "login",
@@ -17,17 +14,33 @@ passport.use(
       passwordField: "password",
     },
     async (username, password, done) => {
-      try {
-        if (username === user.username && password === user.password) {
-          return done(null, user, { message: "Logged in Successfully" });
+      connection.query(
+        "SELECT user_email, password FROM users WHERE user_email = ?",
+        [username],
+        (err, results) => {
+          const user = {
+            username: results[0].user_email,
+            password: results[0].password,
+          };
+          try {
+            if (username === user.username) {
+              bcrypt.compare(password, user.password, function (err, res) {
+                if (res === true) {
+                  return done(null, user, {
+                    message: "Logged in Successfully",
+                  });
+                }
+                return done(null, false, {
+                  message: "User not found or Wrong Password",
+                });
+              });
+            }
+          } catch (error) {
+            console.error(error);
+            return done(error);
+          }
         }
-        return done(null, false, {
-          message: "User not found or Wrong Password",
-        });
-      } catch (error) {
-        console.error(error);
-        return done(error);
-      }
+      );
     }
   )
 );

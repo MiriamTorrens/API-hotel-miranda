@@ -3,16 +3,16 @@ const jwt = require("jsonwebtoken");
 const { passportKey } = require("../env");
 const Joi = require("joi");
 
-const userSchema = Joi.object({
-  username: Joi.string().email().required(),
-  password: Joi.string().pattern(new RegExp("^[a-zA-Z0-9]{3,30}$")).required(),
-});
+// const userSchema = Joi.object({
+//   username: Joi.string().email().required(),
+//   password: Joi.string().pattern(new RegExp("^[a-zA-Z0-9]{3,30}$")).required(),
+// });
 
 exports.login = async (req, res, next) => {
   passport.authenticate("login", async (err, user, info) => {
     try {
       if (err || !user) {
-        const error = new Error("An error occurred.");
+        const error = new Error("User not found or Wrong Password");
         return next(error);
       }
       req.login(user, { session: false }, async (error) => {

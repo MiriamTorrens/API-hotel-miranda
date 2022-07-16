@@ -96,14 +96,10 @@ exports.updateContact = (req, res) => {
         id,
       ],
       (err, results) => {
-        return !results
-          ? res
-              .status(404)
-              .json({ success: false, message: "Contact not found" })
-          : res.json({
-              success: true,
-              message: "Contact successfully updated",
-            });
+        return res.json({
+          success: true,
+          message: "Contact successfully updated",
+        });
       }
     );
   }
