@@ -18,26 +18,35 @@ passport.use(
         "SELECT user_email, password FROM users WHERE user_email = ?",
         [username],
         (err, results) => {
-          const user = {
-            username: results[0].user_email,
-            password: results[0].password,
-          };
-          try {
-            if (username === user.username) {
-              bcrypt.compare(password, user.password, function (err, res) {
-                if (res === true) {
-                  return done(null, user, {
-                    message: "Logged in Successfully",
+          if (results.length > 0) {
+            const user = {
+              username: results[0].user_email,
+              password: results[0].password,
+            };
+            try {
+              if (username === user.username) {
+                bcrypt.compare(password, user.password, function (err, res) {
+                  if (res === true) {
+                    return done(null, user, {
+                      success: true,
+                      message: "Logged in Successfully",
+                    });
+                  }
+                  return done(null, false, {
+                    success: false,
+                    message: "Wrong Password",
                   });
-                }
-                return done(null, false, {
-                  message: "User not found or Wrong Password",
                 });
-              });
+              }
+            } catch (error) {
+              console.error(error);
+              return done(error);
             }
-          } catch (error) {
-            console.error(error);
-            return done(error);
+          } else {
+            done(null, false, {
+              success: false,
+              message: "User not found",
+            });
           }
         }
       );
