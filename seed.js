@@ -7,46 +7,46 @@ const { faker } = require("@faker-js/faker");
 const bcrypt = require("bcrypt");
 
 //Crear collection users
-// for (let i = 0; i < 10; i++) {
-//   let newUser = new User({
-//     user_name: faker.name.firstName() + " " + faker.name.lastName(),
-//     user_email: faker.internet.email(),
-//     user_phone: faker.phone.number("###-###-###"),
-//     start_date: faker.date.past(),
-//     occupation: faker.helpers.arrayElement([
-//       "manager",
-//       "reception",
-//       "room_service",
-//     ]),
-//     status: faker.helpers.arrayElement([0, 1]),
-//     user_image: faker.image.avatar(),
-//     password: bcrypt.hashSync(faker.internet.password(), 5),
-//   });
+for (let i = 0; i < 10; i++) {
+  let newUser = new User({
+    user_name: faker.name.firstName() + " " + faker.name.lastName(),
+    user_email: faker.internet.email(),
+    user_phone: faker.phone.number("###-###-###"),
+    start_date: faker.date.past(),
+    occupation: faker.helpers.arrayElement([
+      "manager",
+      "reception",
+      "room_service",
+    ]),
+    status: faker.helpers.arrayElement([0, 1]),
+    user_image: faker.image.avatar(),
+    password: bcrypt.hashSync(faker.internet.password(), 5),
+  });
 
-//   newUser.save((err, document) => {
-//     if (err) console.log(err);
-//     console.log(document);
-//   });
-// }
+  newUser.save((err, document) => {
+    if (err) console.log(err);
+    console.log(document);
+  });
+}
 
 //Crear collection contacts
-// for (let i = 0; i < 10; i++) {
-//   let newContact = new Contact({
-//     contact_name: faker.name.firstName() + " " + faker.name.lastName(),
-//     contact_email: faker.internet.email(),
-//     contact_phone: faker.phone.number("###-###-###"),
-//     contact_date: faker.date.past(),
-//     subject: faker.hacker.phrase(),
-//     comment: faker.lorem.sentence(),
-//     viewed: faker.helpers.arrayElement([0, 1]),
-//     archived: faker.helpers.arrayElement([0, 1]),
-//   });
+for (let i = 0; i < 10; i++) {
+  let newContact = new Contact({
+    contact_name: faker.name.firstName() + " " + faker.name.lastName(),
+    contact_email: faker.internet.email(),
+    contact_phone: faker.phone.number("###-###-###"),
+    contact_date: faker.date.past(),
+    subject: faker.hacker.phrase(),
+    comment: faker.lorem.sentence(),
+    viewed: faker.helpers.arrayElement([0, 1]),
+    archived: faker.helpers.arrayElement([0, 1]),
+  });
 
-//   newContact.save((err, document) => {
-//     if (err) console.log(err);
-//     console.log(document);
-//   });
-// }
+  newContact.save((err, document) => {
+    if (err) console.log(err);
+    console.log(document);
+  });
+}
 
 //Crear collection rooms
 for (let i = 0; i < 10; i++) {
@@ -84,19 +84,19 @@ for (let i = 0; i < 10; i++) {
 }
 
 //Crear collection bookings
-// for (let i = 0; i < 10; i++) {
-//   let newBooking = new Booking({
-//     guest_name: faker.name.firstName() + " " + faker.name.lastName(),
-//     order_date: faker.date.past(),
-//     checkin: faker.date.future(),
-//     checkout: faker.date.future(),
-//     special_request: faker.hacker.phrase(),
-//     room_id: Math.floor(Math.random() * (10 - 1) + 1),
-//     status: faker.helpers.arrayElement(["checkin", "checkout", "in_progress"]),
-//   });
+for (let i = 0; i < 10; i++) {
+  let newBooking = new Booking({
+    guest_name: faker.name.firstName() + " " + faker.name.lastName(),
+    order_date: faker.date.past(),
+    checkin: faker.date.future(),
+    checkout: faker.date.future(),
+    special_request: faker.hacker.phrase(),
+    room_id: Math.floor(Math.random() * (10 - 1) + 1),
+    status: faker.helpers.arrayElement(["checkin", "checkout", "in_progress"]),
+  });
 
-//   newBooking.save((err, document) => {
-//     if (err) console.log(err);
-//     console.log(document);
-//   });
-// }
+  newBooking.save((err, document) => {
+    if (err) console.log(err);
+    console.log(document);
+  });
+}
