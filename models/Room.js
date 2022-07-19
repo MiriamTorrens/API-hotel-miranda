@@ -9,6 +9,7 @@ const roomSchema = new Schema({
   discount: Number,
   cancellation: String,
   amenities: Array,
+  images: Array,
 });
 
-module.exports = model("Room", contactSchema);
+module.exports = model("Room", roomSchema);
