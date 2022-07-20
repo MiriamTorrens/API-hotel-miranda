@@ -6,7 +6,7 @@ const bookingSchema = new Schema({
   checkin: Date,
   checkout: Date,
   special_request: String,
-  room_id: Number,
+  room_id: { type: Schema.ObjectId, ref: "Room" },
   status: String,
 });
 

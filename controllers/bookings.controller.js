@@ -1,4 +1,4 @@
-const bookings = require("../data/bookings.json");
+require("./db");
 
 exports.bookingsList = (req, res) => {
   return res.json(bookings);

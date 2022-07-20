@@ -6,7 +6,7 @@ const Room = require("./models/Room");
 const { faker } = require("@faker-js/faker");
 const bcrypt = require("bcrypt");
 
-//Crear collection users
+// //Crear collection users
 for (let i = 0; i < 10; i++) {
   let newUser = new User({
     user_name: faker.name.firstName() + " " + faker.name.lastName(),
@@ -29,7 +29,7 @@ for (let i = 0; i < 10; i++) {
   });
 }
 
-//Crear collection contacts
+// //Crear collection contacts
 for (let i = 0; i < 10; i++) {
   let newContact = new Contact({
     contact_name: faker.name.firstName() + " " + faker.name.lastName(),
@@ -49,6 +49,7 @@ for (let i = 0; i < 10; i++) {
 }
 
 //Crear collection rooms
+const rooms = [];
 for (let i = 0; i < 10; i++) {
   let newRoom = new Room({
     room_number: i,
@@ -81,17 +82,19 @@ for (let i = 0; i < 10; i++) {
     if (err) console.log(err);
     console.log(document);
   });
+  rooms.push(newRoom);
 }
 
 //Crear collection bookings
 for (let i = 0; i < 10; i++) {
+  let index = Math.floor(Math.random() * 9);
   let newBooking = new Booking({
     guest_name: faker.name.firstName() + " " + faker.name.lastName(),
     order_date: faker.date.past(),
     checkin: faker.date.future(),
     checkout: faker.date.future(),
     special_request: faker.hacker.phrase(),
-    room_id: Math.floor(Math.random() * (10 - 1) + 1),
+    room_id: rooms[index]._id,
     status: faker.helpers.arrayElement(["checkin", "checkout", "in_progress"]),
   });
 
