@@ -1,6 +1,8 @@
-require("./db");
+require("../db");
+const Booking = require("../models/Booking");
 
-exports.bookingsList = (req, res) => {
+exports.bookingsList = async (req, res) => {
+  const bookings = await Booking.find();
   return res.json(bookings);
 };
 exports.addBooking = (req, res) => {

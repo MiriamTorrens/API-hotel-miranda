@@ -1,8 +1,11 @@
-const users = require("../data/users.json");
+require("../db");
+const User = require("../models/User");
 
-exports.usersList = (req, res) => {
+exports.usersList = async (req, res) => {
+  const users = await User.find();
   return res.json(users);
 };
+
 exports.addUser = (req, res) => {
   users.push(req.body);
   return res.json({ success: true, message: "User successfully added" });

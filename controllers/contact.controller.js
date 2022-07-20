@@ -1,7 +1,9 @@
-const contact = require("../data/contact.json");
+require("../db");
+const Contact = require("../models/Contact");
 
-exports.contactList = (req, res) => {
-  return res.json(contact);
+exports.contactList = async (req, res) => {
+  const contacts = await Contact.find();
+  return res.json(contacts);
 };
 exports.addContact = (req, res) => {
   contact.push(req.body);

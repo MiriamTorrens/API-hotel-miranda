@@ -1,6 +1,8 @@
-const rooms = require("../data/rooms.json");
+require("../db");
+const Room = require("../models/Room");
 
-exports.roomsList = (req, res) => {
+exports.roomsList = async (req, res) => {
+  const rooms = await Room.find();
   return res.json(rooms);
 };
 exports.addRoom = (req, res) => {
