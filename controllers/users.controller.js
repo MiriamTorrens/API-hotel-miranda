@@ -24,7 +24,7 @@ exports.deleteUser = (req, res) => {
     : res.json({ success: true, message: "User successfully deleted" });
 };
 exports.updateUser = async (req, res) => {
-  const user = await User.update(
+  const user = await User.findOneAndUpdate(
     { _id: req.params.id },
     {
       user_name: req.body.user_name,

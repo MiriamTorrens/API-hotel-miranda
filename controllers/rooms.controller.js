@@ -23,7 +23,7 @@ exports.deleteRoom = (req, res) => {
     : res.json({ success: true, message: "Room successfully deleted" });
 };
 exports.updateRoom = async (req, res) => {
-  const room = await Room.update(
+  const room = await Room.findOneAndUpdate(
     { _id: req.params.id },
     {
       room_number: req.body.room_number,

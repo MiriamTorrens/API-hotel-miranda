@@ -23,7 +23,7 @@ exports.deleteContact = (req, res) => {
     : res.json({ sucess: true, message: "Contact successfully deleted" });
 };
 exports.updateContact = async (req, res) => {
-  const contact = await Contact.update(
+  const contact = await Contact.findOneAndUpdate(
     { _id: req.params.id },
     {
       contact_name: req.body.contact_name,

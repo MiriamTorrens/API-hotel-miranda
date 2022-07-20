@@ -23,7 +23,7 @@ exports.deleteBooking = (req, res) => {
     : res.json({ success: true, message: "Booking successfully deleted" });
 };
 exports.updateBooking = async (req, res) => {
-  const booking = await Booking.update(
+  const booking = await Booking.findOneAndUpdate(
     { _id: req.params.id },
     {
       guest_name: req.body.guest_name,
