@@ -15,10 +15,9 @@ exports.getBooking = async (req, res) => {
     ? res.status(404).json({ success: false, message: "Booking not found" })
     : res.json(booking);
 };
-exports.deleteBooking = (req, res) => {
-  const index = bookings.findIndex((b) => b.id === req.params.id);
-  bookings.splice(index, 1);
-  return index < 0
+exports.deleteBooking = async (req, res) => {
+  const booking = await Booking.findOneAndDelete({ _id: req.params.id });
+  return !booking
     ? res.status(404).json({ success: false, message: "Booking not found" })
     : res.json({ success: true, message: "Booking successfully deleted" });
 };

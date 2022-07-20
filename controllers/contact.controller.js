@@ -15,12 +15,11 @@ exports.getContact = async (req, res) => {
     ? res.status(404).json({ success: false, message: "Contact not found" })
     : res.json(contactMessage);
 };
-exports.deleteContact = (req, res) => {
-  const index = contact.findIndex((c) => c.id === req.params.id);
-  contact.splice(index, 1);
-  return index < 0
+exports.deleteContact = async (req, res) => {
+  const contactMessage = await Contact.findOneAndDelete({ _id: req.params.id });
+  return !contactMessage
     ? res.status(404).json({ success: false, message: "Contact not found" })
-    : res.json({ sucess: true, message: "Contact successfully deleted" });
+    : res.json({ success: true, message: "Contact successfully deleted" });
 };
 exports.updateContact = async (req, res) => {
   const contact = await Contact.findOneAndUpdate(

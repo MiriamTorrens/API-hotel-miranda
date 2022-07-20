@@ -15,12 +15,11 @@ exports.getRoom = async (req, res) => {
     ? res.status(404).json({ success: false, message: "Room not found" })
     : res.json(room);
 };
-exports.deleteRoom = (req, res) => {
-  const index = rooms.findIndex((r) => r.id === req.params.id);
-  rooms.splice(index, 1);
-  return index < 0
+exports.deleteRoom = async (req, res) => {
+  const room = await Room.findOneAndDelete({ _id: req.params.id });
+  return !room
     ? res.status(404).json({ success: false, message: "Room not found" })
-    : res.json({ success: true, message: "Room successfully deleted" });
+    : res.json({ success: true, message: "Booking successfully deleted" });
 };
 exports.updateRoom = async (req, res) => {
   const room = await Room.findOneAndUpdate(

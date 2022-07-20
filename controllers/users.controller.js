@@ -16,10 +16,9 @@ exports.getUser = async (req, res) => {
     ? res.status(404).json({ success: false, message: "User not found" })
     : res.json(user);
 };
-exports.deleteUser = (req, res) => {
-  const index = users.findIndex((u) => u.id === req.params.id);
-  users.splice(index, 1);
-  return index < 0
+exports.deleteUser = async (req, res) => {
+  const user = await User.findOneAndDelete({ _id: req.params.id });
+  return !user
     ? res.status(404).json({ success: false, message: "User not found" })
     : res.json({ success: true, message: "User successfully deleted" });
 };
