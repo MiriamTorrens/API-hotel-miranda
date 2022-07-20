@@ -1,5 +1,6 @@
 require("../db");
 const User = require("../models/User");
+const bcrypt = require("bcrypt");
 
 exports.usersList = async (req, res) => {
   const users = await User.find();
@@ -7,7 +8,16 @@ exports.usersList = async (req, res) => {
 };
 
 exports.addUser = async (req, res) => {
-  const newUser = new User(req.body);
+  const newUser = new User({
+    user_name: req.body.user_name,
+    user_email: req.body.user_email,
+    user_phone: req.body.user_phone,
+    start_date: req.body.start_date,
+    occupation: req.body.occupation,
+    status: req.body.status,
+    user_image: req.body.user_image,
+    password: bcrypt.hashSync(req.body.password, 5),
+  });
   await newUser.save();
   return res.json({ success: true, message: "User successfully added" });
 };
@@ -34,7 +44,7 @@ exports.updateUser = async (req, res) => {
       occupation: req.body.occupation,
       status: req.body.status,
       user_image: req.body.user_image,
-      password: req.body.password,
+      password: bcrypt.hashSync(req.body.password, 5),
     }
   );
   return !user
