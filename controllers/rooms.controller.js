@@ -9,8 +9,8 @@ exports.addRoom = (req, res) => {
   rooms.push(req.body);
   return res.json({ success: true, message: "Room successfully added" });
 };
-exports.getRoom = (req, res) => {
-  const room = rooms.find((r) => r.id === req.params.id);
+exports.getRoom = async (req, res) => {
+  const room = await Room.findOne({ _id: req.params.id });
   return !room
     ? res.status(404).json({ success: false, message: "Room not found" })
     : res.json(room);

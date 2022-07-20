@@ -9,8 +9,8 @@ exports.addContact = (req, res) => {
   contact.push(req.body);
   return res.json({ success: true, message: "Contact successfully added" });
 };
-exports.getContact = (req, res) => {
-  const contactMessage = contact.find((c) => c.id === req.params.id);
+exports.getContact = async (req, res) => {
+  const contactMessage = await Contact.findOne({ _id: req.params.id });
   return !contactMessage
     ? res.status(404).json({ success: false, message: "Contact not found" })
     : res.json(contactMessage);

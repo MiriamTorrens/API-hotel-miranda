@@ -9,8 +9,8 @@ exports.addBooking = (req, res) => {
   bookings.push(req.body);
   return res.json({ success: true, message: "Booking successfully added" });
 };
-exports.getBooking = (req, res) => {
-  const booking = bookings.find((b) => b.id === req.params.id);
+exports.getBooking = async (req, res) => {
+  const booking = await Booking.findOne({ _id: req.params.id });
   return !booking
     ? res.status(404).json({ success: false, message: "Booking not found" })
     : res.json(booking);

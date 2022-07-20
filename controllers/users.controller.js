@@ -10,8 +10,8 @@ exports.addUser = (req, res) => {
   users.push(req.body);
   return res.json({ success: true, message: "User successfully added" });
 };
-exports.getUser = (req, res) => {
-  const user = users.find((u) => u.id === req.params.id);
+exports.getUser = async (req, res) => {
+  const user = await User.findOne({ _id: req.params.id });
   return !user
     ? res.status(404).json({ success: false, message: "User not found" })
     : res.json(user);
