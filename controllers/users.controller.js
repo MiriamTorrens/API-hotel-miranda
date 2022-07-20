@@ -10,6 +10,7 @@ exports.usersList = async (req, res) => {
     return res.status(400).json({ success: false, message: err.message });
   }
 };
+
 exports.addUser = async (req, res) => {
   const newUser = new User({
     user_name: req.body.user_name,
@@ -39,6 +40,7 @@ exports.getUser = async (req, res) => {
     return res.status(400).json({ success: false, message: err.message });
   }
 };
+
 exports.deleteUser = async (req, res) => {
   try {
     const user = await User.findOneAndDelete({ _id: req.params.id });
@@ -49,6 +51,7 @@ exports.deleteUser = async (req, res) => {
     return res.status(400).json({ success: false, message: err.message });
   }
 };
+
 exports.updateUser = async (req, res) => {
   try {
     const user = await User.findOneAndUpdate(
