@@ -5,8 +5,9 @@ exports.bookingsList = async (req, res) => {
   const bookings = await Booking.find();
   return res.json(bookings);
 };
-exports.addBooking = (req, res) => {
-  bookings.push(req.body);
+exports.addBooking = async (req, res) => {
+  const newBooking = new Booking(req.body);
+  await newBooking.save();
   return res.json({ success: true, message: "Booking successfully added" });
 };
 exports.getBooking = async (req, res) => {
@@ -16,7 +17,7 @@ exports.getBooking = async (req, res) => {
     : res.json(booking);
 };
 exports.deleteBooking = async (req, res) => {
-  const booking = await Booking.findOneAndDelete({ _id: req.params.id });
+  const booking = await Booking.findOne({ _id: req.params.id });
   return !booking
     ? res.status(404).json({ success: false, message: "Booking not found" })
     : res.json({ success: true, message: "Booking successfully deleted" });

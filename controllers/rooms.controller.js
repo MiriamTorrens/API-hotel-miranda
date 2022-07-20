@@ -5,8 +5,9 @@ exports.roomsList = async (req, res) => {
   const rooms = await Room.find();
   return res.json(rooms);
 };
-exports.addRoom = (req, res) => {
-  rooms.push(req.body);
+exports.addRoom = async (req, res) => {
+  const newRoom = new Room(req.body);
+  await newRoom.save();
   return res.json({ success: true, message: "Room successfully added" });
 };
 exports.getRoom = async (req, res) => {

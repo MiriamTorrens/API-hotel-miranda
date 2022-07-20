@@ -6,8 +6,9 @@ exports.usersList = async (req, res) => {
   return res.json(users);
 };
 
-exports.addUser = (req, res) => {
-  users.push(req.body);
+exports.addUser = async (req, res) => {
+  const newUser = new User(req.body);
+  await newUser.save();
   return res.json({ success: true, message: "User successfully added" });
 };
 exports.getUser = async (req, res) => {

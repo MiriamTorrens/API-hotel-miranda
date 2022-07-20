@@ -5,8 +5,9 @@ exports.contactList = async (req, res) => {
   const contacts = await Contact.find();
   return res.json(contacts);
 };
-exports.addContact = (req, res) => {
-  contact.push(req.body);
+exports.addContact = async (req, res) => {
+  const newContact = new Contact(req.body);
+  await newContact.save();
   return res.json({ success: true, message: "Contact successfully added" });
 };
 exports.getContact = async (req, res) => {
