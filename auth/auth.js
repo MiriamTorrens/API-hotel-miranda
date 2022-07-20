@@ -17,22 +17,16 @@ passport.use(
     async (username, password, done) => {
       const db_user = await User.findOne({
         user_email: username,
-        password: password,
       });
-
       try {
         if (username === db_user.user_email) {
           bcrypt.compare(password, db_user.password, function (err, res) {
             if (res === true) {
-              console.log(res);
               return done(null, db_user, {
                 success: true,
                 message: "Logged in Successfully",
               });
             } else {
-              console.log(res);
-              console.log(password);
-              console.log(db_user.password);
               return done(null, false, {
                 success: false,
                 message: "Wrong Password",

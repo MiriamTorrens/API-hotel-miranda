@@ -6,7 +6,6 @@ exports.usersList = async (req, res) => {
   const users = await User.find();
   return res.json(users);
 };
-
 exports.addUser = async (req, res) => {
   const newUser = new User({
     user_name: req.body.user_name,
