@@ -6,7 +6,12 @@ const Room = require("./models/Room");
 const { faker } = require("@faker-js/faker");
 const bcrypt = require("bcrypt");
 
-// //Crear collection users
+async function saveItem(item) {
+  await item.save();
+  console.log(item);
+}
+
+// //Crear users collection
 for (let i = 0; i < 10; i++) {
   let newUser = new User({
     user_name: faker.name.firstName() + " " + faker.name.lastName(),
@@ -22,14 +27,10 @@ for (let i = 0; i < 10; i++) {
     user_image: faker.image.avatar(),
     password: bcrypt.hashSync(faker.internet.password(), 5),
   });
-
-  newUser.save((err, document) => {
-    if (err) console.log(err);
-    console.log(document);
-  });
+  saveItem(newUser);
 }
 
-// //Crear collection contacts
+//Crear contacts collection
 for (let i = 0; i < 10; i++) {
   let newContact = new Contact({
     contact_name: faker.name.firstName() + " " + faker.name.lastName(),
@@ -41,14 +42,10 @@ for (let i = 0; i < 10; i++) {
     viewed: faker.helpers.arrayElement([0, 1]),
     archived: faker.helpers.arrayElement([0, 1]),
   });
-
-  newContact.save((err, document) => {
-    if (err) console.log(err);
-    console.log(document);
-  });
+  saveItem(newContact);
 }
 
-//Crear collection rooms
+//Crear rooms collection
 const rooms = [];
 for (let i = 0; i < 10; i++) {
   let newRoom = new Room({
@@ -77,15 +74,11 @@ for (let i = 0; i < 10; i++) {
       faker.image.imageUrl("", "", "", true),
     ],
   });
-
-  newRoom.save((err, document) => {
-    if (err) console.log(err);
-    console.log(document);
-  });
+  saveItem(newRoom);
   rooms.push(newRoom);
 }
 
-//Crear collection bookings
+//Crear bookings collection
 for (let i = 0; i < 10; i++) {
   let index = Math.floor(Math.random() * 9);
   let newBooking = new Booking({
@@ -97,9 +90,5 @@ for (let i = 0; i < 10; i++) {
     room_id: rooms[index]._id,
     status: faker.helpers.arrayElement(["checkin", "checkout", "in_progress"]),
   });
-
-  newBooking.save((err, document) => {
-    if (err) console.log(err);
-    console.log(document);
-  });
+  saveItem(newBooking);
 }
