@@ -23,14 +23,21 @@ exports.deleteUser = (req, res) => {
     ? res.status(404).json({ success: false, message: "User not found" })
     : res.json({ success: true, message: "User successfully deleted" });
 };
-exports.updateUser = (req, res) => {
-  users.forEach((user, index) => {
-    if (user.id === req.params.id) {
-      user = user[index];
-      return !user[index]
-        ? res.status(404).json({ success: false, message: "User not found" })
-        : (user[index] = req.body);
+exports.updateUser = async (req, res) => {
+  const user = await User.update(
+    { _id: req.params.id },
+    {
+      user_name: req.body.user_name,
+      user_email: req.body.user_email,
+      user_phone: req.body.user_phone,
+      start_date: req.body.start_date,
+      occupation: req.body.occupation,
+      status: req.body.status,
+      user_image: req.body.user_image,
+      password: req.body.password,
     }
-  });
-  return res.json({ success: true, message: "User successfully updated" });
+  );
+  return !user
+    ? res.status(404).json({ success: false, message: "User not found" })
+    : res.json({ success: true, message: "User successfully updated" });
 };

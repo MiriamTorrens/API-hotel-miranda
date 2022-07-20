@@ -22,14 +22,21 @@ exports.deleteRoom = (req, res) => {
     ? res.status(404).json({ success: false, message: "Room not found" })
     : res.json({ success: true, message: "Room successfully deleted" });
 };
-exports.updateRoom = (req, res) => {
-  rooms.forEach((room, index) => {
-    if (room.id === req.params.id) {
-      room = room[index];
-      return !room[index]
-        ? res.status(404).json({ success: false, message: "Booking not found" })
-        : (rooms[index] = req.body);
+exports.updateRoom = async (req, res) => {
+  const room = await Room.update(
+    { _id: req.params.id },
+    {
+      room_number: req.body.room_number,
+      bed_type: req.body.bed_type,
+      offer: req.body.offer,
+      price: req.body.price,
+      discount: req.body.discount,
+      cancellation: req.body.cancellation,
+      amenities: req.body.amenities,
+      images: req.body.images,
     }
-  });
-  return res.json({ success: true, message: "Booking successfully updated" });
+  );
+  return !room
+    ? res.status(404).json({ success: false, message: "Room not found" })
+    : res.json({ success: true, message: "Booking successfully updated" });
 };

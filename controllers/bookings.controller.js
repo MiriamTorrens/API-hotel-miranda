@@ -22,14 +22,20 @@ exports.deleteBooking = (req, res) => {
     ? res.status(404).json({ success: false, message: "Booking not found" })
     : res.json({ success: true, message: "Booking successfully deleted" });
 };
-exports.updateBooking = (req, res) => {
-  bookings.forEach((booking, index) => {
-    if (booking.id === req.params.id) {
-      booking = booking[index];
-      return !bookings[index]
-        ? res.status(404).json({ success: false, message: "Booking not found" })
-        : (bookings[index] = req.body);
+exports.updateBooking = async (req, res) => {
+  const booking = await Booking.update(
+    { _id: req.params.id },
+    {
+      guest_name: req.body.guest_name,
+      order_date: req.body.order_date,
+      checkin: req.body.checkin,
+      checkout: req.body.checkout,
+      special_request: req.body.special_request,
+      room_id: req.body.room_id,
+      status: req.body.status,
     }
-  });
-  return res.json({ success: true, message: "Booking successfully updated" });
+  );
+  return !booking
+    ? res.status(404).json({ success: false, message: "Booking not found" })
+    : res.json({ success: true, message: "Booking successfully updated" });
 };

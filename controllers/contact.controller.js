@@ -22,14 +22,21 @@ exports.deleteContact = (req, res) => {
     ? res.status(404).json({ success: false, message: "Contact not found" })
     : res.json({ sucess: true, message: "Contact successfully deleted" });
 };
-exports.updateContact = (req, res) => {
-  contact.forEach((contact, index) => {
-    if (contact.id === req.params.id) {
-      contact = contact[index];
-      return !contact[index]
-        ? res.status(404).json({ success: false, message: "Contact not found" })
-        : (contact[index] = req.body);
+exports.updateContact = async (req, res) => {
+  const contact = await Contact.update(
+    { _id: req.params.id },
+    {
+      contact_name: req.body.contact_name,
+      contact_email: req.body.contact_email,
+      contact_phone: req.body.contact_phone,
+      contact_date: req.body.contact_date,
+      subject: req.body.subject,
+      comment: req.body.comment,
+      viewed: req.body.viewed,
+      archived: req.body.archived,
     }
-  });
-  return res.json({ success: true, message: "Contact successfully updated" });
+  );
+  return !contact
+    ? res.status(404).json({ success: false, message: "Contact not found" })
+    : res.json({ success: true, message: "Contact successfully updated" });
 };
