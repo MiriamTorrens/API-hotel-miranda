@@ -11,7 +11,7 @@ async function saveItem(item) {
   console.log(item);
 }
 
-// //Crear users collection
+//Crear users collection
 for (let i = 0; i < 10; i++) {
   let newUser = new User({
     user_name: faker.name.firstName() + " " + faker.name.lastName(),
@@ -47,7 +47,7 @@ for (let i = 0; i < 10; i++) {
 
 //Crear rooms collection
 const rooms = [];
-for (let i = 0; i < 10; i++) {
+for (let i = 1; i <= 10; i++) {
   let newRoom = new Room({
     room_number: i,
     bed_type: faker.helpers.arrayElement([
@@ -73,6 +73,7 @@ for (let i = 0; i < 10; i++) {
       faker.image.imageUrl("", "", "", true),
       faker.image.imageUrl("", "", "", true),
     ],
+    status: faker.helpers.arrayElement(["Available", "Booked"]),
   });
   saveItem(newRoom);
   rooms.push(newRoom);

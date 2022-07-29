@@ -14,6 +14,7 @@ const roomSchema = new Schema({
   cancellation: { type: String, maxLength: 2000 },
   amenities: { type: Array, required: true },
   images: { type: Array, required: true },
+  status: String,
 });
 
 module.exports = model("Room", roomSchema);
